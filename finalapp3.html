@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Green Energy App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    header {
+      background-color: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #c8e6c9;
+      padding: 10px;
+    }
+
+    nav button {
+      background: #388e3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 0 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    nav button:hover {
+      background: #2e7d32;
+    }
+
+    section {
+      display: none;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 25px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #f1f8e9;
+    }
+
+    button.action {
+      background-color: #76ff03;
+      color: #000;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .output {
+      margin-top: 10px;
+      color: #c8e6c9;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      margin: 30px 0;
+      color: #eee;
+    }
+
+    #authContainer {
+      max-width: 400px;
+      margin: 60px auto;
+    }
+
+    .auth-toggle {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .auth-toggle button {
+      background-color: #81c784;
+      border: none;
+      padding: 8px 12px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .auth-toggle button.active {
+      background-color: #388e3c;
+      color: white;
+    }
+
+    #appContent {
+      display: none;
+    }
+
+    .auth-header {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #a5d6a7;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px #000;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="authContainer">
+    <div class="auth-header">🌿 Green Energy App</div>
+
+    <div class="auth-toggle">
+      <button id="loginBtn" class="active" onclick="toggleAuth('login')">Login</button>
+      <button id="registerBtn" onclick="toggleAuth('register')">Register</button>
+    </div>
+
+    <div class="card" id="loginForm">
+      <h2>Login</h2>
+      <input type="text" id="loginUser" placeholder="Username" />
+      <input type="password" id="loginPass" placeholder="Password" />
+      <button class="action" onclick="login()">Login</button>
+      <div class="output" id="loginMsg"></div>
+    </div>
+
+    <div class="card" id="registerForm" style="display: none;">
+      <h2>Register</h2>
+      <input type="text" id="regUser" placeholder="Choose Username" />
+      <input type="password" id="regPass" placeholder="Choose Password" />
+      <button class="action" onclick="register()">Register</button>
+      <div class="output" id="registerMsg"></div>
+    </div>
+  </div>
+
+  <div id="appContent">
+    <header>
+      <h1>🌍 Green Energy App</h1>
+      <p>Switch. Invest. Calculate. Offset.</p>
+    </header>
+
+    <nav>
+      <button onclick="showSection('providers')">Green Providers</button>
+      <button onclick="showSection('crowdfunding')">Crowdfunding</button>
+      <button onclick="showSection('calculator')">Impact Calculator</button>
+      <button onclick="showSection('offset')">Offset Purchase</button>
+    </nav>
+
+    <section id="providers" class="active">
+      <div class="card">
+        <h2>Green Energy Providers</h2>
+        <p><strong>🌞 SunPower Solar Plan</strong><br>100% solar. Avoid ~1,200 kg CO₂/year</p>
+        <button class="action" onclick="switchProvider('SunPower', 1200)">Switch</button>
+
+        <p><strong>💨 WindRise Energy</strong><br>100% wind. Avoid ~950 kg CO₂/year</p>
+        <button class="action" onclick="switchProvider('WindRise', 950)">Switch</button>
+
+        <p><strong>⚡ HydroGreen</strong><br>Clean hydro. Avoid ~800 kg CO₂/year</p>
+        <button class="action" onclick="switchProvider('HydroGreen', 800)">Switch</button>
+
+        <div class="output" id="providerResult"></div>
+      </div>
+    </section>
+
+    <section id="crowdfunding">
+      <div class="card">
+        <h2>Invest in Green Projects</h2>
+        <h3>🌞 Solar Village – Rajasthan</h3>
+        <input type="number" placeholder="₹ Amount" id="solarInput" />
+        <button class="action" onclick="invest('solar')">Invest</button>
+        <div class="output" id="solarRaised">Total Raised: ₹0</div>
+
+        <h3>💨 Wind Project – Tamil Nadu</h3>
+        <input type="number" placeholder="₹ Amount" id="windInput" />
+        <button class="action" onclick="invest('wind')">Invest</button>
+        <div class="output" id="windRaised">Total Raised: ₹0</div>
+
+        <h3>🏫 Solar Rooftops – Schools</h3>
+        <input type="number" placeholder="₹ Amount" id="schoolInput" />
+        <button class="action" onclick="invest('school')">Invest</button>
+        <div class="output" id="schoolRaised">Total Raised: ₹0</div>
+      </div>
+    </section>
+
+    <section id="calculator">
+      <div class="card">
+        <h2>Energy Impact Calculator</h2>
+        <label for="consumption">Monthly Electricity Usage (kWh)</label>
+        <input type="number" id="consumption" placeholder="e.g., 350" />
+        <label for="energyType">Energy Source</label>
+        <select id="energyType">
+          <option value="Solar">Solar</option>
+          <option value="Wind">Wind</option>
+          <option value="Hydro">Hydropower</option>
+        </select>
+        <button class="action" onclick="calculateImpact()">Calculate</button>
+        <div class="output" id="impactResult"></div>
+      </div>
+    </section>
+
+    <section id="offset">
+      <div class="card">
+        <h2>Carbon Offset Purchase</h2>
+        <label for="offsetType">Activity Type</label>
+        <select id="offsetType">
+          <option value="travel">✈️ Air Travel</option>
+          <option value="driving">🚗 Car Travel</option>
+          <option value="consumption">🛒 Product Use</option>
+        </select>
+        <label for="emission">Emissions (kg CO₂)</label>
+        <input type="number" id="emission" placeholder="e.g., 100" />
+        <button class="action" onclick="calculateOffset()">Calculate Offset</button>
+        <div class="output" id="offsetResult"></div>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2025 GreenLife Apps | For a Sustainable Future
+    </footer>
+  </div>
+
+  <script>
+    function toggleAuth(view) {
+      document.getElementById("loginForm").style.display = (view === "login") ? "block" : "none";
+      document.getElementById("registerForm").style.display = (view === "register") ? "block" : "none";
+      document.getElementById("loginBtn").classList.toggle("active", view === "login");
+      document.getElementById("registerBtn").classList.toggle("active", view === "register");
+    }
+
+    function register() {
+      const user = document.getElementById("regUser").value.trim();
+      const pass = document.getElementById("regPass").value;
+      if (!user || !pass) {
+        document.getElementById("registerMsg").textContent = "⚠️ Enter username and password.";
+        return;
+      }
+      if (localStorage.getItem("user_" + user)) {
+        document.getElementById("registerMsg").textContent = "❌ Username already exists.";
+        return;
+      }
+      localStorage.setItem("user_" + user, pass);
+      document.getElementById("registerMsg").textContent = "✅ Registered successfully.";
+    }
+
+    function login() {
+      const user = document.getElementById("loginUser").value.trim();
+      const pass = document.getElementById("loginPass").value;
+      const stored = localStorage.getItem("user_" + user);
+      if (!stored || stored !== pass) {
+        document.getElementById("loginMsg").textContent = "❌ Invalid credentials.";
+        return;
+      }
+      document.getElementById("authContainer").style.display = "none";
+      document.getElementById("appContent").style.display = "block";
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('#appContent section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function switchProvider(name, co2) {
+      document.getElementById("providerResult").innerHTML =
+        `✅ You switched to <strong>${name}</strong>. You’ll avoid <strong>${co2} kg CO₂/year</strong>.`;
+    }
+
+    const raised = { solar: 0, wind: 0, school: 0 };
+    function invest(project) {
+      const input = document.getElementById(project + "Input");
+      const value = parseFloat(input.value);
+      if (isNaN(value) || value <= 0) {
+        alert("Enter a valid amount.");
+        return;
+      }
+      raised[project] += value;
+      document.getElementById(project + "Raised").textContent =
+        `Total Raised: ₹${raised[project].toLocaleString()}`;
+      input.value = "";
+    }
+
+    function calculateImpact() {
+      const usage = parseFloat(document.getElementById("consumption").value);
+      const type = document.getElementById("energyType").value;
+      const factor = 0.92;
+      if (isNaN(usage) || usage <= 0) {
+        document.getElementById("impactResult").textContent = "⚠️ Enter a valid usage amount.";
+        return;
+      }
+      const avoided = usage * factor;
+      document.getElementById("impactResult").innerHTML =
+        `✅ Using <strong>${type}</strong> for ${usage} kWh avoids <strong>${avoided.toFixed(1)} kg CO₂</strong> per month.`;
+    }
+
+    function calculateOffset() {
+      const emission = parseFloat(document.getElementById("emission").value);
+      const type = document.getElementById("offsetType").value;
+      if (isNaN(emission) || emission <= 0) {
+        document.getElementById("offsetResult").textContent = "⚠️ Enter valid CO₂ emissions.";
+        return;
+      }
+      const cost = emission * 20;
+      const label = { travel: "Air Travel", driving: "Car Travel", consumption: "Product Use" }[type];
+      document.getElementById("offsetResult").innerHTML =
+        `✅ To offset <strong>${emission} kg CO₂</strong> from <strong>${label}</strong>, pay <strong>₹${cost.toFixed(2)}</strong>.`;
+    }
+  </script>
+</body>
+</html>
